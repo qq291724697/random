@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>摇号</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <link rel="stylesheet" type="text/css" href="css/countdown.css">
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    td {
+        padding-left: 20px;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    #main {
+        background: #efefef;
+        height: 100%;
+    }
+
+    .head {
+        position: relative;
+    }
+
+    .head>div {
+        position: absolute;
+        color: #be5c55;
+        font-size: 18px;
+        left: 20px;
+        top: 20px;
+    }
+
+    .body {
+        width: calc(100% - 20px);
+        margin: 10px auto 0;
+        background: #fff;
+    }
+
+    .tab {
+        display: flex;
+        border: 1px solid #3695fc;
+    }
+
+    .tab span {
+        color: #3695fc;
+        flex: 1;
+        font-size: 18px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .tab .active {
+        background: #e77e7e;
+        color: #fff;
+    }
+
+    .tab1,
+    .tab2 {
+        width: 50%;
+        height: 200px;
+        display: none;
+        margin: 60px auto;
+        line-height: 200px;
+        text-align: center;
+        color: #fff;
+        font-size: 20px;
+        background: #da9861;
+    }
+
+    .tab1 {
+        display: block;
+    }
+
+    .tab1 span,
+    .tab2 span {
+        color: #e71915;
+        font-size: 36px;
+    }
+
+    .footer {
+        height: 40px;
+    }
+
+    .footer>div {
+        cursor: pointer;
+        padding: 0 10px;
+        text-align: center;
+        font-size: 18px;
+        color: #fff;
+        height: 100%;
+        line-height: 40px;
+        background: #e77e7e;
+    }
+
+    .footer .tab1Btn,
+    .footer .tab2Btn,
+    .footer .tab3Btn {
+        display: inline-block;
+    }
+
+    .footer .tab3Btn {
+        display: flex;
+        background: #fff !important;
+        padding: 0;
+    }
+
+    .tab3Btn>span {
+        height: 100%;
+        line-height: 40px;
+    }
+
+    .tab3Btn>span:nth-child(1) {
+        text-align: center;
+        padding: 0 10px;
+        background: #e77e7e;
+
+    }
+
+    .tab3Btn>span:nth-child(2) {
+        margin-left: 10px;
+        padding: 0 5px;
+        text-align: center;
+        background: #e77e7e;
+
+    }
+
+    .tab3Btn>span:nth-child(3) {
+        text-align: center;
+        padding: 0 10px;
+        color: #e77e7e;
+
+    }
+
+    .tab3Btn>span:nth-child(4) {
+        text-align: center;
+        padding: 0 5px;
+        background: #e77e7e;
+
+    }
+    .pagenation {
+        display: flex;
+        height: 30px;
+        line-height: 30px;
+        justify-content: flex-end;
+        align-items: center;
+        cursor: pointer;
+    }
+    .prev,.next {
+        padding: 0 3px;
+        background-color: #dbdbdb;
+    }
+    .tab3 {
+        position: relative;
+        min-height: 253px;
+    }
+    #table tr,#table th {
+        height: 30px;
+    }
+    th {
+        background: #9a9a9a;
+    }
+    tr.active {
+        background: #dbdbdb;
+    }
+    .modal {
+        width: calc(100% - 60px);
+        height: 50px;
+        border: 2px solid #a1d8fd;
+        background-color: #fff;
+        display: flex;
+    }
+    .modal >span {
+        width: 25%;
+        padding-left: 20px;
+        color: #eb2f2f;
+        font-size: 24px;
+    }
+</style>
+
+<body>
+    <div id="main">
+        <div class="head">
+            <img src="./img/bg.png" style="width:100%" alt="">
+         <!--   <div>公平 公正 公开</div>-->
+        </div>
+        <div class="body">
+            <div class="tab">
+                <span class="active" data-index="1">1人员读取</span>
+                <span data-index="2">2开始摇号</span>
+                <span data-index="3">3结果公示</span>
+            </div>
+            <div class="tab1">
+                当前参与摇号人员 <span></span>
+            </div>
+            <div class="tab2">
+                开始摇号!
+            </div>
+            <div class="tab3">
+                <table id="table" border style="width:100%;margin:10px 0;">
+                    <thead>
+                        <th>抽中顺序</th>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                        <th>所属村组</th>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="pagenation">
+                    <div class="prev" onclick="goPrev()">上一页</div>
+                    <div style="margin:0 5px"><span class="currentPage" style="color:#27a2f3;">1</span>/<span class="total">1</span></div>
+                    <div class="next" onclick="goNext()">下一页</div>
+                </div>
+                <div class="modal" style="position:fixed;display:none">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="tab1Btn" onclick="readPerson()">读取人员</div>
+                <div class="tab2Btn" onclick="YH()" style="display:none">点击开始摇号</div>
+                <div class="tab3Btn" style="display:none"><span onclick="exportPdf()">PDF/摇号结果</span> <span onclick="goPrevPdf()">-</span><span class="currentPdf"
+                        style="margin:0 5px">0</span><span onclick="goNextPdf()">+</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="htmleaf-container" style="display:none">
+        <div class="htmleaf-content bgcolor-8">
+            <div class="count"></div>
+            <script id="count-template" type="text/template">
+			 <span class="current top <%= currentSize %>"><%= time %></span>
+			 <span class="next top <%= nextSize %>"><%= nextTime %></span>
+			 <span class="current bottom <%= currentSize %>"><%= time %></span>
+			 <span class="next bottom <%= nextSize %>"><%= nextTime %></span>
+			</script>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src='js/underscore-1.5.2-min.js'></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/xlsx.full.min.js"></script>
+<script src="js/jspdf.umd.min.js"></script>
+<script src="js/html2canvas.min.js"></script>
+<script>
+    Countdown = function () {
+        _(this).bindAll('update', 'executeAnimation', 'finishAnimation');
+        this.setVars.apply(this, arguments);
+        this.update();
+    };
+    Countdown.prototype = {
+        duration: 1000,
+        setVars: function (time, el, template) {
+            this.max = time;
+            this.time = time;
+            this.el = el;
+            this.template = _(template.innerHTML).template();
+            this.delta = -1;
+        },
+        update: function () {
+            this.checkTime();
+            this.setSizes();
+            this.setupAnimation();
+            _(this.executeAnimation).delay(20);
+            _(this.finishAnimation).delay(this.duration * 0.9);
+            _(this.update).delay(this.duration);
+        },
+        checkTime: function () {
+            this.time += this.delta;
+            if (this.time === 0)
+                this.delta = 1;
+            if (this.time === this.max)
+                this.delta = -1;
+            this.delta === 1 ? this.toggleDirection('up', 'down') : this.toggleDirection('down', 'up');
+            this.nextTime = this.time + this.delta;
+        },
+        toggleDirection: function (add, remove) {
+            this.el.classList.add(add);
+            this.el.classList.remove(remove);
+        },
+        setSizes: function () {
+            this.currentSize = this.getSize(this.time);
+            this.nextSize = this.getSize(this.nextTime);
+        },
+        getSize: function (time) {
+            return time > 9 ? 'small' : '';
+        },
+        setupAnimation: function () {
+            this.el.innerHTML = this.template(this);
+            this.el.classList.remove('changed');
+        },
+        executeAnimation: function () {
+            this.el.classList.add('changing');
+        },
+        finishAnimation: function () {
+            this.el.classList.add('changed');
+            this.el.classList.remove('changing');
+        }
+    };
+</script>
+<script>
+    const NODE = false
+    var listNew = [], pNum = 0;
+    var pageSize=10;
+    var currentPage = 1,currentPdf = 0,resultList = []
+    function createRandom(num, from, to) {
+        var arr = [];
+        var json = {};
+        while (arr.length < num) {
+            //产生单个随机数
+            var ranNum = Math.ceil(Math.random() * (to - from)) + from;
+            //通过判断json对象的索引值是否存在 来标记 是否重复
+            if (!json[ranNum]) {
+                json[ranNum] = 1;
+                arr.push(ranNum);
+            }
+
+        }
+        return arr;
+    }
+    function readPerson() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', './excel/1.xls', true);    // 也可以使用POST方式，根据接口
+        xhr.responseType = "blob";  // 返回类型blob
+        xhr.onload = function () {
+            // 请求完成
+            if (this.status === 200) {
+                // 返回200
+                var blob = this.response;
+                var reader = new FileReader();
+                reader.readAsBinaryString(blob);  // 转换为base64
+                reader.onload = function (e) {
+                    const data = e.target.result;
+                    const zzexcel = XLSX.read(data, {
+                        type: 'binary',
+                    });
+                    var list = []
+                    listNew = list.concat(XLSX.utils.sheet_to_json(zzexcel.Sheets['Sheet1']))
+                    console.log(listNew)
+                    pNum = listNew.length;
+
+                    if (pNum) {
+                        $('.tab1 span').html(pNum)
+                    }
+                    sessionStorage.setItem('isRP', 1)
+                }
+            } else {
+
+            }
+        };
+        xhr.send()
+    }
+    function YH() {
+        //摇号
+        if (pNum <= 0) {
+            return alert('请先读取人员,或人员数为0')
+        }
+        var randomArr = createRandom(listNew.length, 0, listNew.length)
+        console.log(randomArr)
+        listNew.forEach((item, index) => {
+            item.sort = randomArr[index]
+        })
+        listNew.sort((a,b)=>{return a.sort-b.sort})
+        $('.htmleaf-container').show()
+        new Countdown(11, document.querySelector('.count'), document.querySelector('#count-template'));
+        setTimeout(() => {
+            $('.htmleaf-container').hide()
+            if(NODE){
+                $.post('http://127.0.0.1:8899/createResult', { listNew: JSON.stringify(listNew) }, function (res) {
+                    sessionStorage.setItem('tabType', 3)
+                    pNum = 0
+                    $('.tab1 span').html(pNum)
+                    $('.tab2').show()
+                    $('.tab1').hide()
+                    $('.tab3').hide()
+                    $('.tab2Btn').show()
+                    $('.tab1Btn').hide()
+                    $('.tab3Btn').hide()
+                })
+            }else {
+                //本地存储reslut
+           localStorage.setItem('reultjson',JSON.stringify(listNew))
+           sessionStorage.setItem('tabType', 3)
+           window.location.reload()
+            }
+            
+        }, 10000)
+
+
+    }
+    function reslutShow() {
+        if(NODE){
+            $.getJSON('./result/result.json', function (res) {
+                console.log(res)
+                var data = JSON.parse(res)
+                resultList= data;
+                $('.tab3').show()
+                $('.tab1').hide()
+                $('.tab2').hide()
+                $('.tab3Btn').show()
+                $('.tab1Btn').hide()
+                $('.tab2Btn').hide()
+                $('.tab span').each((index, item) => {
+                    $(item).removeClass('active')
+                })
+                $('.tab span:nth-of-type(3)').addClass('active')
+                setTable()
+    
+            }).fail((err) => {
+                console.log(err)
+                alert('无摇号结果，请先摇号')
+                sessionStorage.setItem('tabType', 2)
+                window.location.reload()
+                if (sessionStorage.getItem('isRP') == 1) {
+                    readPerson()
+                }
+            })
+        }else {
+                //本地存储
+            if(localStorage.getItem('reultjson')){
+                var data = JSON.parse(localStorage.getItem('reultjson'))
+                resultList= data;
+                $('.tab3').show()
+                $('.tab1').hide()
+                $('.tab2').hide()
+                $('.tab3Btn').show()
+                $('.tab1Btn').hide()
+                $('.tab2Btn').hide()
+                $('.tab span').each((index, item) => {
+                    $(item).removeClass('active')
+                })
+                $('.tab span:nth-of-type(3)').addClass('active')
+                setTable()
+            }else {
+                alert('无摇号结果，请先摇号')
+                sessionStorage.setItem('tabType', 2)
+                window.location.reload()
+                if (sessionStorage.getItem('isRP') == 1) {
+                    readPerson()
+                }
+            }
+        }
+        
+    }
+    //导出pdf
+    function exportPdf() {
+    	
+    	//----------------导出EXCEL---------------------------------------------------
+    	// 将[{},{}]的数据格式转换成[[],[]]
+    	var data = JSON.parse(localStorage.getItem('reultjson'))
+		var keys = Object.keys(data[0]);  // 获取数组中第一个对象的key
+		var result = [keys];  // 数组第一个元素为所有key组成的数组
+		  data.forEach(function(obj) {
+		  var row = [];
+		    keys.forEach(function(key) {
+		      row.push(obj[key]);  // 将对象属性值按顺序加入一维数组
+		    });
+		    result.push(row);  // 将一维数组加入结果数组
+		  });
+		 
+		  // 创建一个工作簿
+	    var workbook = XLSX.utils.book_new();
+	    // 创建一个工作表，数据格式为[[],[]]需将[{},{}]的数据格式转换成[[],[]]
+	    var sheet = XLSX.utils.aoa_to_sheet(result);
+	    // 将工作表添加到工作簿
+	    XLSX.utils.book_append_sheet(workbook, sheet, "Sheet1");
+	    // 将数据导出为 Excel 文件
+	    XLSX.writeFile(workbook, "result.xls");
+	    
+	    //----------------导出PDF---------------------------------------------------
+        var target = $('#table')[0]
+
+        target.style.background = "#FFFFFF";
+
+        html2canvas(target, {
+            useCORS: true, //允许跨域
+            allowTaint: false,
+            logging: false,
+            letterRendering: true,
+            ddpi: window.devicePixelRatio * 4, //将分辨率提高到特定的DPI 提高四倍
+            scale: 4, //按比例增加分辨率
+            background: '#fff'//pdf背景色为白色，默认是黑色的
+        }).then((canvas) => {
+            //返回图片dataURL，参数：图片格式和清晰度(0-1)
+            var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+            //方向默认竖直，尺寸ponits，格式a4[595.28,841.89]
+            var pdf = new jspdf.jsPDF('', 'pt', 'a4');
+
+            //addImage后两个参数控制添加图片的尺寸，此处将页面高度按照a4纸宽高比列进行压缩
+            pdf.addImage(pageData, 'JPEG', 0, 0, 595.28, 592.28 / canvas.width * canvas.height);
+
+            //保存到pdf，名字是stone
+            pdf.save('摇号结果.pdf');
+
+        });
+    }
+    function setTable(){
+        console.log('currentPage',currentPage)
+        var str = '',data = resultList.slice((currentPage - 1) * pageSize,currentPage*pageSize)
+        console.log(data)
+            data.forEach(item => {
+                str += `<tr class="index${item.sort}"><td>${item['sort'] || 0}</td><td>${item['姓名'] || ''}</td><td>${item['身份证号'] || ''}</td><td>${item['所属村组'] || ''}</td></tr>`
+            })
+            console.log(str)
+            $('#table tbody').html(str)
+            $('.currentPage').html(currentPage)
+            $('.total').html(Math.ceil(resultList.length / pageSize))
+            openModal()
+    }
+    function openModal(){
+        localStorage.setItem('currentPdf',currentPdf)
+        if(currentPdf == 0){
+            $('.modal').hide()
+            $('#table tr').each((index,item)=>{
+                $(item).removeClass('active')
+            })
+            $('.currentPdf').html(currentPdf)
+        return
+        } 
+        console.log(Math.ceil(currentPdf / pageSize))
+        if(Math.ceil(currentPdf / pageSize) != currentPage){
+            debugger;
+            currentPage = Math.ceil(currentPdf /pageSize)
+            setTable()
+            return
+        }
+        var offset = $(`.index${currentPdf}`).offset()
+        $('.modal').css({left:offset.left + 20 + 'px',top:offset.top - 35 + 'px'})
+        $('#table tr').each((index,item)=>{
+            $(item).removeClass('active')
+        })
+        $(`.index${currentPdf}`).addClass('active')
+        $('.modal').show()
+        $('.currentPdf').html(currentPdf)
+        console.log(resultList[currentPdf - 1])
+        $('.modal >span:nth-child(1)').html(resultList[currentPdf - 1].sort)
+        $('.modal >span:nth-child(2)').html(resultList[currentPdf - 1]['姓名'])
+        $('.modal >span:nth-child(3)').html(resultList[currentPdf - 1]['身份证号'])
+        $('.modal >span:nth-child(4)').html(resultList[currentPdf - 1]['所属村组'])
+    }
+    function goPrevPdf(){
+        if(currentPdf == 0){
+            return
+        }
+        currentPdf--
+        openModal()
+    }
+    function goNextPdf(){
+        if(currentPdf == resultList.length){
+            currentPdf = 0
+            $('.currentPdf').html(currentPdf)
+            $('#table tr').each((index,item)=>{
+                $(item).removeClass('active')
+            })
+            $('.modal').hide()
+            return 
+        }
+        currentPdf++
+        openModal()
+    }
+    function goPrev(){
+        if(currentPage == 1){
+            return alert('已经是第一页')
+        }
+        currentPage--
+        setTable()
+    }
+    function goNext(){
+        if(currentPage == Math.ceil(resultList.length / pageSize)){
+            return alert('已经是最后一页')
+        }
+        currentPage++
+        setTable()
+    }
+
+    $('.tab span').on('click', (e) => {
+        var type = $(e.target).attr('data-index');
+        console.log(type)
+        if (type == 1) {
+         if (sessionStorage.getItem('isRP') == 1) {
+                readPerson()
+            }
+            $('.tab1').show()
+            $('.tab2').hide()
+            $('.tab3').hide()
+            $('.tab1Btn').show()
+            $('.tab2Btn').hide()
+            $('.tab3Btn').hide()
+            sessionStorage.setItem('tabType', 1)
+        } else if (type == 2) {
+            if (sessionStorage.getItem('isRP') != 1) {
+                alert('请先读取人员')
+                sessionStorage.setItem('tabType', 1)
+                return 
+            }
+            readPerson()
+            $('.tab2').show()
+            $('.tab1').hide()
+            $('.tab3').hide()
+            $('.tab2Btn').show()
+            $('.tab1Btn').hide()
+            $('.tab3Btn').hide()
+            sessionStorage.setItem('tabType', 2)
+
+        } else if (type == 3) {
+            $('.tab3').show()
+            $('.tab1').hide()
+            $('.tab2').hide()
+            $('.tab3Btn').show()
+            $('.tab1Btn').hide()
+            $('.tab2Btn').hide()
+            sessionStorage.setItem('tabType', 3)
+            reslutShow()
+        }
+        $('.tab span').removeClass('active')
+        $(e.target).addClass('active')
+    })
+
+    //有点击过读取人员
+    if (sessionStorage.getItem('tabType') != 3) {
+        if (sessionStorage.getItem('isRP') == 1) {
+            readPerson()
+        }
+        $('.tab1').show()
+        $('.tab2').hide()
+        $('.tab3').hide()
+        $('.tab1Btn').show()
+        $('.tab2Btn').hide()
+        $('.tab3Btn').hide()
+    }
+    if (sessionStorage.getItem('tabType') == 3) {
+        currentPdf = localStorage.getItem('currentPdf') || 0;
+        reslutShow()
+    }
+
+</script>
